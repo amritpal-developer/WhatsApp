@@ -19,10 +19,10 @@ const SettingScreen = () => {
       <ScrollView style={styles.container}>
         <View style={styles.profileBox}>
           <View style={styles.profileRow}>
-            <Avatar.Image
+            {/* <Avatar.Image
               size={RFValue(50)}
               source={require('../assets/images/avatar.png')}
-            />
+            /> */}
             <View style={styles.column}>
               <Text style={styles.name}>{'Amritpal'}</Text>
               <Text style={styles.status}>{'Status'}</Text>

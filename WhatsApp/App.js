@@ -7,6 +7,7 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {bottomTab as BottomTab} from './src/Navigation/bottomTab';
 import MyStack from './src/Navigation/Stack';
 import {NavigationContainer} from '@react-navigation/native';
+import Firebase from './Firebase';
 const App = () => {
   return (
     // <View style={{flex: 1}}>

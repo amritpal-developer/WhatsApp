@@ -9,6 +9,7 @@ platform :ios, min_ios_version_supported
 prepare_react_native_project!
 $FirebaseSDKVersion = '10.17.0'
 pod 'Firebase', :modular_headers => true
+pod 'Firebase/Auth'
 pod 'FirebaseCoreInternal', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true

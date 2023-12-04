@@ -33,7 +33,7 @@
 		DF46129C2B18B05800446CE7 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF4612892B18B05800446CE7 /* Foundation.ttf */; };
 		DF46129D2B18B05800446CE7 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF46128A2B18B05800446CE7 /* MaterialCommunityIcons.ttf */; };
 		DF46129E2B18B05800446CE7 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF46128B2B18B05800446CE7 /* AntDesign.ttf */; };
-		DF4612A72B18C1CC00446CE7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF4612A62B18C1CB00446CE7 /* GoogleService-Info.plist */; };
+		DF4734CF2B19C9F400DF297D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF4734CE2B19C9F400DF297D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +82,7 @@
 		DF4612892B18B05800446CE7 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = Fonts/Foundation.ttf; sourceTree = "<group>"; };
 		DF46128A2B18B05800446CE7 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = Fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		DF46128B2B18B05800446CE7 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = Fonts/AntDesign.ttf; sourceTree = "<group>"; };
-		DF4612A62B18C1CB00446CE7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DF4734CE2B19C9F400DF297D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -126,6 +126,7 @@
 		13B07FAE1A68108700A75B9A /* WhatsApp */ = {
 			isa = PBXGroup;
 			children = (
+				DF4734CE2B19C9F400DF297D /* GoogleService-Info.plist */,
 				DF4612782B18AFA100446CE7 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -157,7 +158,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				DF4612A62B18C1CB00446CE7 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* WhatsApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* WhatsAppTests */,
@@ -259,8 +259,6 @@
 			dependencies = (
 			);
 			name = WhatsApp;
-			packageProductDependencies = (
-			);
 			productName = WhatsApp;
 			productReference = 13B07F961A680F5B00A75B9A /* WhatsApp.app */;
 			productType = "com.apple.product-type.application";
@@ -291,8 +289,6 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
-			packageReferences = (
-			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -334,7 +330,7 @@
 				DF4612982B18B05800446CE7 /* FontAwesome6_Regular.ttf in Resources */,
 				DF4612922B18B05800446CE7 /* FontAwesome5_Regular.ttf in Resources */,
 				DF46129B2B18B05800446CE7 /* FontAwesome5_Solid.ttf in Resources */,
-				DF4612A72B18C1CC00446CE7 /* GoogleService-Info.plist in Resources */,
+				DF4734CF2B19C9F400DF297D /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				DF4612902B18B05800446CE7 /* FontAwesome6_Solid.ttf in Resources */,
 			);
@@ -592,8 +588,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MU2HBNZVP7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WhatsApp/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -604,7 +602,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.whatsapp;
 				PRODUCT_NAME = WhatsApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -619,7 +617,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MU2HBNZVP7;
 				INFOPLIST_FILE = WhatsApp/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -630,7 +630,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.whatsapp;
 				PRODUCT_NAME = WhatsApp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
