@@ -31,7 +31,9 @@ const LoginScreen = ({navigation}) => {
   const [user, setUser] = useState();
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState('');
+  const [validateNumber, setValidateNumber] = useState(false);
   const {auth} = FirebaseSetup();
+  const [otp, setOTP] = useState('');
   async function verifyPhoneNumber(phoneNumber) {
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     console.log('confirmation', confirmation);
@@ -61,6 +63,27 @@ const LoginScreen = ({navigation}) => {
       setValue(temp);
     }
   }
+  function validate() {
+    console.log(value?.length);
+    if (value?.length == 10) {
+      setValidateNumber(true);
+      Submit();
+    }
+    setValidateNumber(false);
+  }
+  function Submit() {
+    if (validateNumber) {
+      if (otp == '123456') {
+        navigation.navigate('EditProfile', {
+          phoneNumber: '+91 ' + value,
+        });
+      } else {
+        Alert.alert('Enter correct OTP');
+      }
+    } else {
+      Alert.alert('Enter correct Number');
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -71,11 +94,11 @@ const LoginScreen = ({navigation}) => {
           source={require('../assets/images/bg.jpg')}></Image>
         <View style={styles.innerContainer}>
           <Text style={styles.txt}>
-            {true
+            {!validateNumber
               ? 'Enter your Mobile Number to login or register'
               : 'Enter the OTP received with the Number'}
           </Text>
-          {false ? (
+          {!validateNumber ? (
             <PhoneInput
               ref={phoneInput}
               containerStyle={styles.textInputContainer}
@@ -99,7 +122,10 @@ const LoginScreen = ({navigation}) => {
             <OtpInput
               numberOfDigits={6}
               focusColor="#25D366"
-              onTextChange={text => console.log(text)}
+              onTextChange={text => {
+                console.log(text);
+                setOTP(text);
+              }}
               containerStyle={styles.OTPcontainer}
               inputsContainerStyle={styles.inputsContainer}
               pinCodeContainerStyle={styles.pinCodeContainer}
@@ -108,18 +134,20 @@ const LoginScreen = ({navigation}) => {
               focusStickBlinkingDuration={500}
             />
           )}
-          <View style={styles.textGroup}>
-            <Text style={styles.codeText}>Didn't recieved the code? </Text>
-            <TouchableOpacity
-              // style={styles.btn}
-              onPress={() => verifyPhoneNumber('+91' + value)}>
-              <Text style={styles.codeTextBtn}>RESEND CODE</Text>
-            </TouchableOpacity>
-          </View>
+          {validateNumber && (
+            <View style={styles.textGroup}>
+              <Text style={styles.codeText}>Didn't recieved the code? </Text>
+              <TouchableOpacity
+                // style={styles.btn}
+                onPress={() => verifyPhoneNumber('+91' + value)}>
+                <Text style={styles.codeTextBtn}>RESEND CODE</Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <TouchableOpacity
             style={styles.btn}
             onPress={() => {
-              navigation.navigate('SignUp')
+              validate();
             }}>
             <Arrow
               height={responsiveScreenHeight(14)}
@@ -184,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
     width: responsiveScreenWidth(90),
-    flex:0.3
+    flex: 0.3,
   },
   textInputContainer: {
     height:
