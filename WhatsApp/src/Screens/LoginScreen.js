@@ -34,6 +34,11 @@ const LoginScreen = ({navigation}) => {
   const [validateNumber, setValidateNumber] = useState(false);
   const {auth} = FirebaseSetup();
   const [otp, setOTP] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+  const [errorDetails, setErrorDetails] = useState({
+    valid: false,
+    errorMessage: '',
+  });
   async function verifyPhoneNumber(phoneNumber) {
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     console.log('confirmation', confirmation);
@@ -55,34 +60,39 @@ const LoginScreen = ({navigation}) => {
       }
     }
   }
-  function digitsCheck(text) {
-    if (text.length <= 10) {
-      setValue(text);
-    } else {
-      const temp = text.substring(0, 10);
-      setValue(temp);
-    }
-  }
   function validate() {
-    console.log(value?.length);
-    if (value?.length == 10) {
-      setValidateNumber(true);
-      Submit();
-    }
-    setValidateNumber(false);
-  }
-  function Submit() {
-    if (validateNumber) {
-      if (otp == '123456') {
-        navigation.navigate('EditProfile', {
-          phoneNumber: '+91 ' + value,
-        });
-      } else {
-        Alert.alert('Enter correct OTP');
-      }
+    if (!value || value.length < 10) {
+      setErrorDetails({
+        valid: false,
+        errorMessage: 'Enter the valid Phone Number',
+      });
+      setValidateNumber(false);
     } else {
-      Alert.alert('Enter correct Number');
+      setErrorDetails({
+        valid: true,
+        errorMessage: '',
+      });
+      setValidateNumber(true);
     }
+  }
+  function validateOTP() {
+    if (otp == '123456') {
+      setErrorDetails({
+        valid: true,
+        errorMessage: '',
+      });
+      navigationHandle();
+    } else {
+      setErrorDetails({
+        valid: false,
+        errorMessage: 'Enter the valid OTP',
+      });
+    }
+  }
+  function navigationHandle() {
+    navigation.navigate('EditProfile', {
+      phoneNumber: '+91 ' + value,
+    });
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -99,47 +109,63 @@ const LoginScreen = ({navigation}) => {
               : 'Enter the OTP received with the Number'}
           </Text>
           {!validateNumber ? (
-            <PhoneInput
-              ref={phoneInput}
-              containerStyle={styles.textInputContainer}
-              //  defaultValue={value}
-              textContainerStyle={styles.textContainer}
-              value={value}
-              defaultCode="IN"
-              layout="first"
-              onChangeText={text => {
-                // setValue(text);
-                digitsCheck(text);
-              }}
-              onChangeFormattedText={text => {
-                setFormattedValue(text);
-              }}
-              withDarkTheme
-              withShadow
-              autoFocus
-            />
+            <View style={styles.phoneInput}>
+              <PhoneInput
+                ref={phoneInput}
+                containerStyle={styles.textInputContainer}
+                //  defaultValue={value}
+                textContainerStyle={styles.textContainer}
+                value={value}
+                textInputProps={{maxLength: 10}}
+                defaultCode="IN"
+                layout="first"
+                onChangeCountry={code => {
+                  setCountryCode(code);
+                }}
+                onChangeText={text => {
+                  setValue(text);
+                  setErrorDetails({
+                    valid: true,
+                    errorMessage: '',
+                  });
+                }}
+                onChangeFormattedText={text => {
+                  setFormattedValue(text);
+                }}
+                withDarkTheme
+                withShadow
+                autoFocus
+              />
+              <Text style={styles.error}>{errorDetails?.errorMessage}</Text>
+            </View>
           ) : (
-            <OtpInput
-              numberOfDigits={6}
-              focusColor="#25D366"
-              onTextChange={text => {
-                console.log(text);
-                setOTP(text);
-              }}
-              containerStyle={styles.OTPcontainer}
-              inputsContainerStyle={styles.inputsContainer}
-              pinCodeContainerStyle={styles.pinCodeContainer}
-              pinCodeTextStyle={styles.pinCodeText}
-              focusStickStyle={styles.focusStick}
-              focusStickBlinkingDuration={500}
-            />
+            <View style={styles.phoneInput}>
+              <OtpInput
+                numberOfDigits={6}
+                focusColor="#25D366"
+                onTextChange={text => {
+                  setOTP(text);
+                  setErrorDetails({
+                    valid: true,
+                    errorMessage: '',
+                  });
+                }}
+                containerStyle={styles.OTPcontainer}
+                inputsContainerStyle={styles.inputsContainer}
+                pinCodeContainerStyle={styles.pinCodeContainer}
+                pinCodeTextStyle={styles.pinCodeText}
+                focusStickStyle={styles.focusStick}
+                focusStickBlinkingDuration={500}
+              />
+              <Text style={styles.error}>{errorDetails?.errorMessage}</Text>
+            </View>
           )}
           {validateNumber && (
             <View style={styles.textGroup}>
               <Text style={styles.codeText}>Didn't recieved the code? </Text>
               <TouchableOpacity
                 // style={styles.btn}
-                onPress={() => verifyPhoneNumber('+91' + value)}>
+                onPress={() => verifyPhoneNumber('+91 ' + value)}>
                 <Text style={styles.codeTextBtn}>RESEND CODE</Text>
               </TouchableOpacity>
             </View>
@@ -147,7 +173,7 @@ const LoginScreen = ({navigation}) => {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => {
-              validate();
+              validateNumber ? validateOTP() : validate();
             }}>
             <Arrow
               height={responsiveScreenHeight(14)}
@@ -167,12 +193,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
+  phoneInput: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   txt: {
     color: 'black',
     fontWeight: '700',
     fontSize: RFValue(15),
     marginVertical: '3%',
     flex: 0.2,
+  },
+  error: {
+    color: 'red',
+    padding: '2%',
+    alignSelf:'flex-start'
   },
   btn: {
     flex: 1,

@@ -119,7 +119,7 @@ const EditProfileScreen = ({navigation, route}) => {
         </View>
         <Text style={styles.phoneNumber}>PHONE NUMBER</Text>
         <View style={styles.ProfileData}>
-          <Text style={styles.Number}>{'+91 8427345394'}</Text>
+          <Text style={styles.Number}>{number}</Text>
         </View>
         <Text style={styles.phoneNumber}>ABOUT</Text>
         <TouchableOpacity style={styles.ProfileData}>
