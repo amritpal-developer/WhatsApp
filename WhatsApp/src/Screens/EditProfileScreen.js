@@ -13,6 +13,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {RFValue} from 'react-native-responsive-fontsize';
 import CommonTextInput from '../components/TextInput';
+import Arrow from '../assets/svg/arrow.svg';
 import {Avatar} from 'react-native-paper';
 import AvatarIcon from '../assets/svg/avatar.svg';
 // import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -30,6 +31,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 const EditProfileScreen = ({navigation, route}) => {
   const number = route?.params?.phoneNumber;
   const [imageResult, setImageResult] = useState();
+  const [focus, setFocus] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
   const [nameCount, setNameCount] = useState(25);
@@ -103,6 +105,8 @@ const EditProfileScreen = ({navigation, route}) => {
             <View style={styles.dash}></View>
             <View style={styles.TextInputView}>
               <TextInput
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
                 style={styles.input}
                 maxLength={25}
                 onChangeText={text => {
@@ -112,7 +116,7 @@ const EditProfileScreen = ({navigation, route}) => {
                 value={name}
                 placeholder="Name"
               />
-              <Text>{nameCount}</Text>
+              {focus ? <Text>{nameCount}</Text> : null}
             </View>
             <View style={styles.dash}></View>
           </View>
@@ -132,6 +136,14 @@ const EditProfileScreen = ({navigation, route}) => {
               size={RFValue(25)}
             />
           </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate('Home')}>
+          <Arrow
+            height={responsiveScreenHeight(14)}
+            width={responsiveScreenWidth(14)}
+          />
         </TouchableOpacity>
       </ScrollView>
       <Modal
@@ -177,22 +189,24 @@ const EditProfileScreen = ({navigation, route}) => {
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.rowBtn}
-                onPress={() => {
-                  setImageResult();
-                  setModalVisible(false);
-                }}>
-                <View style={styles.ModalRow}>
-                  <Text style={styles.RowTextDelete}>Delete Photo</Text>
-                  <AntDesign
-                    style={styles.Icon}
-                    name={'delete'}
-                    color={'red'}
-                    size={RFValue(25)}
-                  />
-                </View>
-              </TouchableOpacity>
+              {imageResult && (
+                <TouchableOpacity
+                  style={styles.rowBtn}
+                  onPress={() => {
+                    setImageResult();
+                    setModalVisible(false);
+                  }}>
+                  <View style={styles.ModalRow}>
+                    <Text style={styles.RowTextDelete}>Delete Photo</Text>
+                    <AntDesign
+                      style={styles.Icon}
+                      name={'delete'}
+                      color={'red'}
+                      size={RFValue(25)}
+                    />
+                  </View>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -210,6 +224,13 @@ const styles = StyleSheet.create({
   },
   aboutRow: {
     flexDirection: 'row',
+  },
+  btn: {
+    flex: 1,
+    bottom: 0,
+    borderRadius: RFValue(7),
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
   },
   Number: {
     color: 'black',
@@ -285,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: RFValue(100),
     borderColor: 'white',
     borderWidth: RFValue(1),
-    marginStart:'5%'
+    marginStart: '5%',
   },
   ImagePickerEdit: {
     // bottom: RFValue(18),
@@ -293,7 +314,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'blue',
     textAlign: 'center',
-    padding:'5%'
+    padding: '5%',
   },
   ImagePickerEdit2: {
     top: RFValue(8),
@@ -323,7 +344,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   ModalHeader: {
-    flex: 0.3,
+    // flex: 0.3,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -355,10 +376,11 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   modalContainer: {
-    flex: 0.9,
+    // flex: 0.2,
     backgroundColor: 'black',
     borderRadius: RFValue(13),
     padding: '3%',
-    bottom: '10%',
+    // bottom: '10%',
+    justifyContent: 'center',
   },
 });

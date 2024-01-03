@@ -5,6 +5,7 @@ import BottomTab from './bottomTab';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoginScreen from '../Screens/LoginScreen';
 import EditProfileScreen from '../Screens/EditProfileScreen';
+import ChatHistory from '../Screens/ChatHistory';
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -26,6 +27,7 @@ function MyStack() {
       />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="ChatHistory" component={ChatHistory} />
     </Stack.Navigator>
   );
 }
