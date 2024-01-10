@@ -8,13 +8,16 @@ import {bottomTab as BottomTab} from './src/Navigation/bottomTab';
 import MyStack from './src/Navigation/Stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Firebase from './Firebase';
+import Store from './src/storage/Store';
+import { Provider } from "react-redux";
 const App = () => {
   return (
     // <View style={{flex: 1}}>
+    <Provider store={Store}>
     <NavigationContainer>
       <MyStack />
     </NavigationContainer>
-    // </View>
+    </Provider>
   );
 };
 const styles = StyleSheet.create({});

@@ -10,8 +10,9 @@ import {
   Image,
   Platform,
   KeyboardAvoidingView,
+  useColorScheme,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Arrow from '../assets/svg/arrow.svg';
 import {
   responsiveScreenHeight,
@@ -22,7 +23,14 @@ import PhoneNumberAuth from '../Utils/PhoneNumberAuth';
 import {RFValue} from 'react-native-responsive-fontsize';
 import FirebaseSetup from '../../Firebase';
 import {OtpInput} from 'react-native-otp-entry';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {setThemeBoolean} from '../storage/ThemeSlice';
+import {darkTheme, lightTheme} from '../Utils/theme';
 const LoginScreen = ({navigation}) => {
+  const deviceTheme = useColorScheme();
+  const dispatch = useDispatch();
+  const theme = useSelector(state => state?.name);
   const phoneInput = useRef(null);
   const [formattedValue, setFormattedValue] = useState('');
   const [valid, setValid] = useState(false);
@@ -39,6 +47,16 @@ const LoginScreen = ({navigation}) => {
     valid: false,
     errorMessage: '',
   });
+  function themeSwitch() {
+    if (deviceTheme == 'light') {
+      dispatch(setThemeBoolean(true));
+    } else {
+      dispatch(setThemeBoolean(false));
+    }
+  }
+  useEffect(() => {
+    themeSwitch();
+  }, [deviceTheme]);
   async function verifyPhoneNumber(phoneNumber) {
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     console.log('confirmation', confirmation);
@@ -95,15 +113,46 @@ const LoginScreen = ({navigation}) => {
     });
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme
+            ? lightTheme?.colors?.WHITE
+            : darkTheme?.colors?.BLACK,
+        },
+      ]}>
       <KeyboardAvoidingView
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+          },
+        ]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Image
           style={styles.bg}
           source={require('../assets/images/bg.jpg')}></Image>
-        <View style={styles.innerContainer}>
-          <Text style={styles.txt}>
+        <View
+          style={[
+            styles.innerContainer,
+            {
+              backgroundColor: theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          <Text
+            style={[
+              styles.txt,
+              {
+                color: !theme
+                  ? lightTheme?.colors?.WHITE
+                  : darkTheme?.colors?.LIGHT_BLACK,
+              },
+            ]}>
             {!validateNumber
               ? 'Enter your Mobile Number to login or register'
               : 'Enter the OTP received with the Number'}
@@ -112,13 +161,37 @@ const LoginScreen = ({navigation}) => {
             <View style={styles.phoneInput}>
               <PhoneInput
                 ref={phoneInput}
-                containerStyle={styles.textInputContainer}
+                layout="second"
+                containerStyle={[
+                  styles.textInputContainer,
+                  {
+                    backgroundColor: theme
+                      ? lightTheme?.colors?.WHITE
+                      : darkTheme?.colors?.BACKGROUND_GREY,
+                  },
+                ]}
+                textInputStyle={{
+                  color: !theme
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.BACKGROUND_GREY,
+                }}
                 //  defaultValue={value}
-                textContainerStyle={styles.textContainer}
+                textContainerStyle={[
+                  styles.textContainer,
+                  {
+                    backgroundColor: theme
+                      ? lightTheme?.colors?.WHITE
+                      : darkTheme?.colors?.BACKGROUND_GREY,
+                  },
+                ]}
+                codeTextStyle={{
+                  color: !theme
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.BACKGROUND_GREY,
+                }}
                 value={value}
                 textInputProps={{maxLength: 10}}
                 defaultCode="IN"
-                layout="first"
                 onChangeCountry={code => {
                   setCountryCode(code);
                 }}
@@ -178,6 +251,7 @@ const LoginScreen = ({navigation}) => {
             <Arrow
               height={responsiveScreenHeight(14)}
               width={responsiveScreenWidth(14)}
+              color={'black'}
             />
           </TouchableOpacity>
         </View>
@@ -191,7 +265,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'white',
   },
   phoneInput: {
     flexDirection: 'column',
@@ -207,7 +280,7 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     padding: '2%',
-    alignSelf:'flex-start'
+    alignSelf: 'flex-start',
   },
   btn: {
     flex: 1,
@@ -234,7 +307,6 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     width: Dimensions.get('screen').width,
-    backgroundColor: 'white',
     borderTopLeftRadius: RFValue(15),
     borderTopRightRadius: RFValue(15),
     alignItems: 'center',
@@ -257,6 +329,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: 'center',
+    color: 'red',
   },
   OTPcontainer: {
     height: responsiveScreenHeight(7),
