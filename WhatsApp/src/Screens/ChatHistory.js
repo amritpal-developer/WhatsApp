@@ -3,9 +3,10 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   ImageBackground,
   useColorScheme,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +18,9 @@ import {
 } from 'react-native-responsive-dimensions';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTheme} from '@react-navigation/native';
+import {darkTheme, lightTheme} from '../Utils/theme';
+import {TextInput} from 'react-native-paper';
+import InputBox from '../components/InputBox';
 const ChatHistory = ({navigation}) => {
   const {colors} = useTheme();
   const [message, setMessage] = useState('');
@@ -24,26 +28,69 @@ const ChatHistory = ({navigation}) => {
   const image = require('../assets/images/whatsAppBG.jpg');
   const darkImage = require('../assets/images/whatsAppBGDark.jpg');
   return (
-    <SafeAreaView style={styles.container}>
-      <ImageBackground
-        source={colorScheme == 'dark' ? darkImage : image}
-        resizeMode="cover"
-        style={styles.chatContainer}></ImageBackground>
-      <View style={styles.bottomContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          {
+            backgroundColor:
+              colorScheme != 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.BLACK,
+          },
+        ]}>
+        <ImageBackground
+          source={colorScheme == 'dark' ? darkImage : image}
+          resizeMode="cover"
+          style={styles.chatContainer}></ImageBackground>
+        {/* <View
+        style={[
+          styles.bottomContainer,
+          {
+            backgroundColor:
+              colorScheme != 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.BLACK,
+          },
+        ]}>
         <MaterialCommunityIcons
           style={styles.archiveIcon}
           name="plus"
           color={'#4682b4'}
           size={RFValue(23)}
         />
-        <TextInput
-          style={styles.input}
-          onChangeText={text => setMessage(text)}
-          value={message}
-          numberOfLines={4}
-          multiline={true}
-          inputMode="text"
-        />
+        <View style={{}}>
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor:
+                  colorScheme != 'dark'
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+              },
+            ]}
+            textColor={
+              colorScheme == 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK
+            }
+            right={<TextInput.Icon icon="eye" />}
+            onChangeText={text => setMessage(text)}
+            value={message}
+            numberOfLines={4}
+            activeUnderlineColor={
+              colorScheme != 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK
+            }
+            outlineStyle={{borderRadius: 100}}
+            multiline={true}
+            inputMode="text"
+          />
+        </View>
         <Feather
           name={'camera'}
           size={RFValue(21)}
@@ -56,8 +103,10 @@ const ChatHistory = ({navigation}) => {
           color={'#4682b4'}
           style={styles.arrowIcon}
         />
-      </View>
-    </SafeAreaView>
+      </View> */}
+        <InputBox />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -79,18 +128,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: '8%',
+    height: responsiveScreenHeight(30),
   },
   input: {
-    height: responsiveScreenHeight(5),
     width: responsiveScreenWidth(65),
-    margin: '2%',
-    padding: '2%',
-    borderWidth: RFValue(1),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: RFValue(15),
-    backgroundColor: '#fdfdf9',
-    borderColor: '#f3efef',
+    borderRadius: RFValue(10),
   },
   cameraIcon: {
     marginHorizontal: '3%',

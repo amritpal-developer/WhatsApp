@@ -9,12 +9,14 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  useColorScheme,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {RFValue} from 'react-native-responsive-fontsize';
 import CommonTextInput from '../components/TextInput';
 import Arrow from '../assets/svg/arrow.svg';
 import {Avatar} from 'react-native-paper';
+import DarkArrow from '../assets/svg/darkArrow.svg';
 import AvatarIcon from '../assets/svg/avatar.svg';
 // import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
@@ -22,14 +24,21 @@ import {
   responsiveScreenHeight,
 } from 'react-native-responsive-dimensions';
 import Feather from 'react-native-vector-icons/Feather';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {setThemeBoolean} from '../storage/ThemeSlice';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {darkTheme, lightTheme} from '../Utils/theme';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import uuid from 'react-native-uuid';
 import firestore from '@react-native-firebase/firestore';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 const EditProfileScreen = ({navigation, route}) => {
   const number = route?.params?.phoneNumber;
+  const deviceTheme = useColorScheme();
+  const dispatch = useDispatch();
+  const theme = useSelector(state => state?.name);
   const [imageResult, setImageResult] = useState();
   const [focus, setFocus] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -41,6 +50,16 @@ const EditProfileScreen = ({navigation, route}) => {
       setDataOnCloud();
     }
   }, []);
+  function themeSwitch() {
+    if (deviceTheme == 'light') {
+      dispatch(setThemeBoolean(true));
+    } else {
+      dispatch(setThemeBoolean(false));
+    }
+  }
+  useEffect(() => {
+    themeSwitch();
+  }, [deviceTheme]);
   function setDataOnCloud() {
     // const userID = uuid.v4();
     firestore()
@@ -77,15 +96,60 @@ const EditProfileScreen = ({navigation, route}) => {
     setModalVisible(false);
   }
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Text style={styles.headerText}>Edit Profile</Text>
-        <View style={styles.ProfileData}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme
+            ? lightTheme?.colors?.WHITE
+            : darkTheme?.colors?.BLACK,
+        },
+      ]}>
+      <ScrollView
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}>
+        <Text
+          style={[
+            styles.headerText,
+            {
+              color: !theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          Edit Profile
+        </Text>
+        <View
+          style={[
+            styles.ProfileData,
+            {
+              backgroundColor: theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
           <View style={styles.row}>
             <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
               {!imageResult ? (
                 <View style={styles.ImagePickerEmpty}>
-                  <Text style={styles.ImagePickerEdit}>add Photo</Text>
+                  <Text
+                    style={[
+                      styles.ImagePickerEdit,
+                      {
+                        color: !theme
+                          ? lightTheme?.colors?.WHITE
+                          : darkTheme?.colors?.LIGHT_BLACK,
+                      },
+                    ]}>
+                    add Photo
+                  </Text>
                 </View>
               ) : (
                 <View style={styles.ImagePicker}>
@@ -93,11 +157,29 @@ const EditProfileScreen = ({navigation, route}) => {
                     size={RFValue(50)}
                     source={{uri: imageResult?.assets[0]?.uri}}
                   />
-                  <Text style={styles.ImagePickerEdit2}>Edit</Text>
+                  <Text
+                    style={[
+                      styles.ImagePickerEdit2,
+                      {
+                        color: !theme
+                          ? lightTheme?.colors?.WHITE
+                          : darkTheme?.colors?.LIGHT_BLACK,
+                      },
+                    ]}>
+                    Edit
+                  </Text>
                 </View>
               )}
             </TouchableWithoutFeedback>
-            <Text style={styles.MessageText}>
+            <Text
+              style={[
+                styles.MessageText,
+                {
+                  color: !theme
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+                },
+              ]}>
               {'Enter the name and add an optional profile picture'}
             </Text>
           </View>
@@ -107,7 +189,16 @@ const EditProfileScreen = ({navigation, route}) => {
               <TextInput
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
-                style={styles.input}
+                style={[styles.input,{
+                  color: !theme
+                  ? lightTheme?.colors?.WHITE
+                  : darkTheme?.colors?.LIGHT_BLACK,
+                }]}
+                placeholderTextColor={{
+                  color: !theme
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+                }}
                 maxLength={25}
                 onChangeText={text => {
                   setName(text);
@@ -116,23 +207,88 @@ const EditProfileScreen = ({navigation, route}) => {
                 value={name}
                 placeholder="Name"
               />
-              {focus ? <Text>{nameCount}</Text> : null}
+              {focus ? (
+                <Text
+                  style={{
+                    color: !theme
+                      ? lightTheme?.colors?.WHITE
+                      : darkTheme?.colors?.LIGHT_BLACK,
+                  }}>
+                  {nameCount}
+                </Text>
+              ) : null}
             </View>
             <View style={styles.dash}></View>
           </View>
         </View>
-        <Text style={styles.phoneNumber}>PHONE NUMBER</Text>
-        <View style={styles.ProfileData}>
-          <Text style={styles.Number}>{number}</Text>
+        <Text
+          style={[
+            styles.phoneNumber,
+            {
+              color: !theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          PHONE NUMBER
+        </Text>
+        <View
+          style={[
+            styles.ProfileData,
+            {
+              backgroundColor: theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          <Text
+            style={[
+              styles.Number,
+              {
+                color: !theme
+                  ? lightTheme?.colors?.WHITE
+                  : darkTheme?.colors?.LIGHT_BLACK,
+              },
+            ]}>
+            {number}
+          </Text>
         </View>
-        <Text style={styles.phoneNumber}>ABOUT</Text>
-        <TouchableOpacity style={styles.ProfileData}>
+        <Text
+          style={[
+            styles.phoneNumber,
+            {
+              color: !theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          ABOUT
+        </Text>
+        <TouchableOpacity
+          style={[
+            styles.ProfileData,
+            {
+              backgroundColor: theme
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
           <View style={styles.aboutRow}>
-            <Text style={styles.aboutText}>{'#WMk'}</Text>
+            <Text
+              style={[
+                styles.aboutText,
+                {
+                  color: !theme
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+                },
+              ]}>
+              {'#WMk'}
+            </Text>
             <MaterialIcons
               style={styles.archiveIcon}
               name="keyboard-arrow-right"
-              color={'black'}
+              color={!theme ? 'white' : 'black'}
               size={RFValue(25)}
             />
           </View>
@@ -140,10 +296,17 @@ const EditProfileScreen = ({navigation, route}) => {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => navigation.navigate('Home')}>
-          <Arrow
-            height={responsiveScreenHeight(14)}
-            width={responsiveScreenWidth(14)}
-          />
+          {theme ? (
+            <Arrow
+              height={responsiveScreenHeight(14)}
+              width={responsiveScreenWidth(14)}
+            />
+          ) : (
+            <DarkArrow
+              height={responsiveScreenHeight(14)}
+              width={responsiveScreenWidth(14)}
+            />
+          )}
         </TouchableOpacity>
       </ScrollView>
       <Modal

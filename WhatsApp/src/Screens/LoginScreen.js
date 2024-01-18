@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Arrow from '../assets/svg/arrow.svg';
+import DarkArrow from '../assets/svg/darkArrow.svg';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
@@ -141,7 +142,7 @@ const LoginScreen = ({navigation}) => {
             {
               backgroundColor: theme
                 ? lightTheme?.colors?.WHITE
-                : darkTheme?.colors?.LIGHT_BLACK,
+                : darkTheme?.colors?.BLACK
             },
           ]}>
           <Text
@@ -223,19 +224,32 @@ const LoginScreen = ({navigation}) => {
                     errorMessage: '',
                   });
                 }}
-                containerStyle={styles.OTPcontainer}
-                inputsContainerStyle={styles.inputsContainer}
-                pinCodeContainerStyle={styles.pinCodeContainer}
-                pinCodeTextStyle={styles.pinCodeText}
-                focusStickStyle={styles.focusStick}
-                focusStickBlinkingDuration={500}
+                theme={{
+                  pinCodeContainerStyle: styles.pinCodeContainer,
+                  pinCodeTextStyle: {
+                    color: !theme
+                      ? lightTheme?.colors?.WHITE
+                      : darkTheme?.colors?.BACKGROUND_GREY,
+                  },
+                  focusStickStyle: styles.focusStick,
+                }}
               />
               <Text style={styles.error}>{errorDetails?.errorMessage}</Text>
             </View>
           )}
           {validateNumber && (
             <View style={styles.textGroup}>
-              <Text style={styles.codeText}>Didn't recieved the code? </Text>
+              <Text
+                style={[
+                  styles.codeText,
+                  {
+                    color: !theme
+                      ? lightTheme?.colors?.WHITE
+                      : darkTheme?.colors?.BACKGROUND_GREY,
+                  },
+                ]}>
+                Didn't recieved the code?{' '}
+              </Text>
               <TouchableOpacity
                 // style={styles.btn}
                 onPress={() => verifyPhoneNumber('+91 ' + value)}>
@@ -248,11 +262,17 @@ const LoginScreen = ({navigation}) => {
             onPress={() => {
               validateNumber ? validateOTP() : validate();
             }}>
-            <Arrow
-              height={responsiveScreenHeight(14)}
-              width={responsiveScreenWidth(14)}
-              color={'black'}
-            />
+            {theme ? (
+              <Arrow
+                height={responsiveScreenHeight(14)}
+                width={responsiveScreenWidth(14)}
+              />
+            ) : (
+              <DarkArrow
+                height={responsiveScreenHeight(14)}
+                width={responsiveScreenWidth(14)}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -290,7 +310,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   codeText: {
-    color: 'black',
     fontWeight: '500',
     fontSize: RFValue(12),
     marginVertical: '3%',

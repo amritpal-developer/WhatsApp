@@ -5,12 +5,16 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  Image,
+  useColorScheme,
 } from 'react-native';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
+import {darkTheme, lightTheme} from '../Utils/theme';
 import {FlatList} from 'react-native-gesture-handler';
 import Avatar from '../assets/svg/avatar.svg';
 import {
@@ -18,62 +22,97 @@ import {
   responsiveScreenHeight,
 } from 'react-native-responsive-dimensions';
 import moment from 'moment';
+import DATA from '../data/chats.json';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 const HomeScreen = ({navigation}) => {
-  let localTime = moment().format('h:mm A');
-  const DATA = [
-    {
-      id: '1',
-      name: 'First Item',
-      lastMessage: 'hi tom',
-      image: '',
-      time: localTime,
-    },
-    {
-      id: '2',
-      name: 'Second Item',
-      lastMessage: 'ok g',
-      image: '',
-      time: localTime,
-    },
-    {
-      id: '3',
-      name: 'Third Item',
-      lastMessage: 'hello',
-      image: '',
-      time: localTime,
-    },
-  ];
-
+  const colorScheme = useColorScheme();
   const Item = ({item}) => (
     <TouchableOpacity
       style={styles.chatBox}
       onPress={() => navigation.navigate('ChatHistory')}>
-      <Avatar
-        height={responsiveScreenHeight(12)}
-        width={responsiveScreenWidth(12)}
-      />
+      <Image source={{uri: item?.user?.image}} style={styles.image} />
       <View style={styles.chatContent}>
         <View style={styles.chatRow}>
-          <Text style={styles.userName}>{item?.name}</Text>
-          <Text style={styles.chatLastMessage}>{item?.time}</Text>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.userName,
+              {
+                color:
+                  colorScheme == 'dark'
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+              },
+            ]}>
+            {item?.user?.name}
+          </Text>
+          <Text
+            style={[
+              styles.timeStamp,
+              {
+                color:
+                  colorScheme == 'dark'
+                    ? lightTheme?.colors?.WHITE
+                    : darkTheme?.colors?.LIGHT_BLACK,
+              },
+            ]}>
+            {dayjs(item?.lastMessage?.createdAt).fromNow(true)}
+          </Text>
         </View>
-        <Text style={styles.chatLastMessage}>{item?.lastMessage}</Text>
+        <Text
+          numberOfLines={2}
+          style={[
+            styles.chatLastMessage,
+            {
+              color:
+                colorScheme == 'dark'
+                  ? lightTheme?.colors?.WHITE
+                  : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          {item?.lastMessage?.text}
+        </Text>
       </View>
     </TouchableOpacity>
   );
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Chats</Text>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            colorScheme != 'dark'
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+        },
+      ]}>
+      {/* <Text style={styles.headerText}>Chats</Text> */}
       <View style={styles.ArchiveSection}>
-        <MaterialCommunityIcons
+        <FontAwesome
           style={styles.archiveIcon}
-          name="plus"
+          name="archive"
           color={'grey'}
-          size={RFValue(25)}
+          size={RFValue(20)}
         />
-        <Text style={styles.archivedText}>Archived</Text>
+        <Text
+          style={[
+            styles.archivedText,
+            {
+              color:
+                colorScheme == 'dark'
+                  ? lightTheme?.colors?.WHITE
+                  : darkTheme?.colors?.LIGHT_BLACK,
+            },
+          ]}>
+          Archived
+        </Text>
       </View>
       <FlatList
+        contentContainerStyle={{
+          padding: '2%',
+        }}
         data={DATA}
         renderItem={({item}) => <Item item={item} />}
         keyExtractor={item => item.id}
@@ -88,24 +127,33 @@ const styles = StyleSheet.create({
   menuIcon: {
     flex: 1,
   },
+  timeStamp: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: RFValue(12),
+  },
   container: {
     flex: 1,
-    margin: '3%',
   },
   chatRow: {
+    width: responsiveScreenWidth(60),
     flexDirection: 'row',
   },
   chatLastMessage: {
+    flex: 1,
     fontSize: RFValue(12),
+    width: responsiveScreenWidth(50),
+    flexWrap: 'wrap',
+    // backgroundColor:'red'
   },
   userName: {
-    width: '70%',
+    // width: '70%',
     fontSize: RFValue(14),
     fontWeight: '600',
   },
   chatBox: {
     // backgroundColor: 'grey',
-    borderTopWidth: RFValue(1),
+    borderTopWidth: StyleSheet.hairlineWidth,
     padding: '2%',
     // paddingVertical: '2%',
     flexDirection: 'row',
@@ -130,6 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    marginVertical: '4%',
   },
   ImagePickerEmpty: {
     justifyContent: 'center',
@@ -140,6 +189,11 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: RFValue(1),
     marginStart: '5%',
+  },
+  image: {
+    width: responsiveScreenWidth(20),
+    aspectRatio: 1,
+    borderRadius: RFValue(100),
   },
   ImagePickerEdit: {
     // bottom: RFValue(18),

@@ -25,9 +25,9 @@ import {
 } from 'react-native-responsive-dimensions';
 import Avatar from '../assets/svg/avatar.svg';
 import {useDispatch, useSelector} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 const Stack = createStackNavigator();
-
-function MyStack({navigation}) {
+function MyStack() {
   const deviceTheme = useColorScheme();
   const dispatch = useDispatch();
   const theme = useSelector(state => state?.name);
@@ -46,7 +46,12 @@ function MyStack({navigation}) {
       <Stack.Screen
         options={{
           headerShown: false,
-          headerStyle: {...styles.headerStyle},
+          headerStyle: {
+            ...styles.headerStyle,
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.LIGHT_BLACK,
+          },
           headerLeft: () => {
             return (
               <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -58,14 +63,53 @@ function MyStack({navigation}) {
         name="Home"
         component={BottomTab}
       />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          // headerShown: false,
+          headerStyle: {
+            ...styles.headerStyle,
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+          },
+          headerTitleStyle: {
+            color: !theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.LIGHT_BLACK,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{
+          // headerShown: false,
+          headerStyle: {
+            ...styles.headerStyle,
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+          },
+          headerTitleStyle: {
+            color: !theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.LIGHT_BLACK,
+          },
+        }}
+      />
       <Stack.Screen
         name="ChatHistory"
         component={ChatHistory}
-        options={{
+        options={({ navigation, route }) => ({
           headerShown: true,
-          headerStyle: {...styles.headerStyle},
+          headerStyle: {
+            ...styles.headerStyle,
+            backgroundColor: theme
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK,
+          },
           headerTitle: () => {
             return (
               <SafeAreaView style={styles.chatHistoryHeader}>
@@ -112,7 +156,7 @@ function MyStack({navigation}) {
               </SafeAreaView>
             );
           },
-        }}
+        })}
       />
     </Stack.Navigator>
   );

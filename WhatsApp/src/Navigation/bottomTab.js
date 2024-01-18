@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, useColorScheme} from 'react-native';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -15,10 +15,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {RFValue} from 'react-native-responsive-fontsize';
 import CustomSwitch from '../Utils/CustomSwitch';
 import UpdateIcon from '../assets/svg/UpdateIcon.svg';
+import BlueUpdateIcon from '../assets/svg/blueUpdateIcon.svg';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
+import {darkTheme, lightTheme} from '../Utils/theme';
 const Stack = createStackNavigator();
 const onSelectSwitch = index => {
   console.log('Selected index: ' + index);
@@ -38,13 +40,14 @@ function headerTitle(textLabel1, textLabel2) {
   );
 }
 function headerLeft(iconName, iconLibrary, textTitle) {
+  const colorScheme = useColorScheme();
   return (
     <View style={styles.headerLeftStyle}>
       {iconName ? (
         <MaterialCommunityIcons
           style={styles.headerIcon}
           name={iconName}
-          color={'#87b8ea'}
+          color={'royalblue'}
           size={RFValue(25)}
         />
       ) : null}
@@ -55,6 +58,7 @@ function headerLeft(iconName, iconLibrary, textTitle) {
   );
 }
 function headerRight(iconName, iconName2, iconLibrary, svg) {
+  const colorScheme = useColorScheme();
   return (
     <View style={styles.headerRightStyle}>
       {iconName ? (
@@ -62,14 +66,14 @@ function headerRight(iconName, iconName2, iconLibrary, svg) {
           <MaterialIcons
             style={styles.headerIcon}
             name={iconName}
-            color={'#87b8ea'}
+            color={'royalblue'}
             size={RFValue(25)}
           />
         ) : (
           <MaterialCommunityIcons
             style={styles.headerIcon}
             name={iconName}
-            color={'#87b8ea'}
+            color={'royalblue'}
             size={RFValue(25)}
           />
         )
@@ -79,14 +83,14 @@ function headerRight(iconName, iconName2, iconLibrary, svg) {
           <AntDesign
             style={styles.headerIcon}
             name={iconName2}
-            color={'#87b8ea'}
+            color={'royalblue'}
             size={RFValue(25)}
           />
         ) : (
           <MaterialCommunityIcons
             style={styles.headerIcon}
             name={iconName}
-            color={'#87b8ea'}
+            color={'royalblue'}
             size={RFValue(25)}
           />
         )
@@ -155,6 +159,7 @@ const CommunitiesScreenNavigator = () => {
 };
 const BottomTab = () => {
   const Tab = createBottomTabNavigator();
+  const colorScheme = useColorScheme();
   function tabBarIcon(focused, icon, IconLibrary, svg) {
     return (
       <View
@@ -166,41 +171,46 @@ const BottomTab = () => {
           <MaterialCommunityIcons
             // style={styles.menuIcon}
             name={icon}
-            color={focused ? '#87b8ea' : '#999999'}
+            color={focused ? 'royalblue' : '#999999'}
             size={RFValue(25)}
           />
         ) : IconLibrary == 'Ionicons' ? (
           <Ionicons
             // style={styles.menuIcon}
             name={icon}
-            color={focused ? '#87b8ea' : '#999999'}
+            color={focused ? 'royalblue' : '#999999'}
             size={RFValue(25)}
           />
         ) : IconLibrary == 'Feather' ? (
           <Feather
             // style={styles.menuIcon}
             name={icon}
-            color={focused ? '#87b8ea' : '#999999'}
+            color={focused ? 'royalblue' : '#999999'}
             size={RFValue(25)}
           />
         ) : IconLibrary == 'AntDesign' ? (
           <AntDesign
             // style={styles.menuIcon}
             name={icon}
-            color={focused ? '#87b8ea' : '#999999'}
+            color={focused ? 'royalblue' : '#999999'}
             size={RFValue(25)}
           />
         ) : IconLibrary == 'MaterialIcons' ? (
           <MaterialIcons
             // style={styles.menuIcon}
             name={icon}
-            color={focused ? '#87b8ea' : '#999999'}
+            color={focused ? 'royalblue' : '#999999'}
             size={RFValue(25)}
           />
+        ) : !focused ? (
+          <UpdateIcon
+            width={responsiveScreenWidth(8)}
+            height={responsiveScreenHeight(8)}
+          />
         ) : (
-          <UpdateIcon 
-          width={responsiveScreenWidth(8)}
-          height={responsiveScreenHeight(8)}
+          <BlueUpdateIcon
+            width={responsiveScreenWidth(8)}
+            height={responsiveScreenHeight(8)}
           />
         )}
       </View>
@@ -213,13 +223,20 @@ const BottomTab = () => {
           activeTintColor: 'blue',
           headerShown: false,
           tabBarActiveTintColor: 'blue',
+        
         }}
         options={{
+          tabBarStyle:{
+            backgroundColor:
+            colorScheme != 'dark'
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK, 
+          },
           headerShown: true,
           headerTitleAlign: 'center',
           tabBarLabel: 'Updates',
           tabBarIcon: ({focused}) =>
-          tabBarIcon(focused, 'update', '', 'UpdateIcon'),
+            tabBarIcon(focused, 'update', '', 'UpdateIcon'),
           headerRight: () => headerRight('menu', '', ''),
         }}
         name="Updates"
@@ -227,6 +244,12 @@ const BottomTab = () => {
       />
       <Tab.Screen
         options={{
+          tabBarStyle:{
+            backgroundColor:
+            colorScheme != 'dark'
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK, 
+          },
           headerShown: true,
           headerTitleAlign: 'center',
           tabBarLabel: 'Calls',
@@ -247,6 +270,12 @@ const BottomTab = () => {
           tabBarLabel: 'Communities',
           tabBarIcon: ({focused}) =>
             tabBarIcon(focused, 'groups', 'MaterialIcons'),
+            tabBarStyle:{
+              backgroundColor:
+              colorScheme != 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.BLACK, 
+            },
         }}
         name="Communities"
         component={CommunitiesScreenNavigator}
@@ -260,6 +289,24 @@ const BottomTab = () => {
           tabBarIcon: ({focused}) => tabBarIcon(focused, 'wechat', 'AntDesign'),
           headerLeft: () => headerLeft('menu', 'AntDesign'),
           headerRight: () => headerRight('camera', 'pluscircle', 'AntDesign'),
+          tabBarStyle:{
+            backgroundColor:
+            colorScheme != 'dark'
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK, 
+          },
+          headerStyle: {
+            backgroundColor:
+              colorScheme != 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.BLACK, // Specify the height of your custom header
+          },
+          headerTitleStyle: {
+            color:
+              colorScheme == 'dark'
+                ? lightTheme?.colors?.WHITE
+                : darkTheme?.colors?.LIGHT_BLACK,
+          },
         }}
         name="Chats"
         component={HomeScreenNavigator}
@@ -270,9 +317,16 @@ const BottomTab = () => {
           headerTitleAlign: 'center',
           tabBarLabel: 'Settings',
           tabBarIcon: ({focused}) => tabBarIcon(focused, 'settings', 'Feather'),
+          tabBarStyle:{
+            backgroundColor:
+            colorScheme != 'dark'
+              ? lightTheme?.colors?.WHITE
+              : darkTheme?.colors?.BLACK, 
+          },
         }}
         name="Settings"
         component={SettingsScreenNavigator}
+        
       />
     </Tab.Navigator>
   );
